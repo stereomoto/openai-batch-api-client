@@ -71,7 +71,7 @@ node src/cli.js check <batchId>
 ### Download Results
 
 ```bash
-node src/cli.js download <batchId> -o results
+node src/cli.js download <batchId>
 ```
 
 ## File Structure

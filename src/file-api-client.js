@@ -67,10 +67,11 @@ class FileApiClient {
                 purpose: fileInfo.purpose
             });
 
-            const fileContent = await this.openai.files.content(fileId);
+            const fileContentResponse = await this.openai.files.content(fileId);
+            const fileContent = await fileContentResponse.text();
             console.log('File content retrieved, writing to:', outputPath);
 
-            await fs.writeFile(outputPath, fileContent, 'utf-8');
+            await fs.promises.writeFile(outputPath, fileContent, 'utf-8');
             console.log('File written successfully');
 
             return outputPath;

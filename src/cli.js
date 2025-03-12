@@ -7,6 +7,9 @@ const InputHandler = require('./input-handler');
 const BatchRequestGenerator = require('./batch-request-generator');
 const FileApiClient = require('./file-api-client');
 const BatchApiClient = require('./batch-api-client');
+const fs = require('fs');
+const readline = require('readline');
+const { parse } = require('json2csv');
 
 const program = new Command();
 
@@ -120,10 +123,68 @@ program
                 await fileApiClient.downloadFile(status.error_file_id, errorPath);
                 console.log(`Errors downloaded to ${errorPath}`);
             }
+
+            // Convert JSONL to CSV
+            const csvOutputPath = path.join(options.output, `batch_${batchId}_output.csv`);
+            await convertJsonlToCsv(outputPath, csvOutputPath);
+            console.log(`CSV file created at ${csvOutputPath}`);
         } catch (error) {
             console.error('Error downloading results:', error.message);
             process.exit(1);
         }
     });
+
+async function convertJsonlToCsv(inputFilePath, outputFilePath) {
+    const fileStream = fs.createReadStream(inputFilePath);
+    const rl = readline.createInterface({
+        input: fileStream,
+        crlfDelay: Infinity
+    });
+
+    const csvData = [];
+    const headersSet = new Set(['custom_id']); // Start with 'custom_id' as a default header
+
+    for await (const line of rl) {
+        const jsonObject = JSON.parse(line);
+        const customId = jsonObject.custom_id;
+        const choices = jsonObject.response.body.choices;
+
+        if (Array.isArray(choices)) {
+            choices.forEach(choice => {
+                let content = choice.message.content;
+                if (content !== null) {
+                    // Remove newline characters from content
+                    content = content.replace(/\n/g, ' ').replace(/\r/g, ' ');
+                } else {
+                    console.warn(`Warning: 'content' is null for custom_id: ${customId}`);
+                    content = '';
+                }
+                let result = { custom_id: customId };
+
+                try {
+                    // Attempt to parse the content as JSON
+                    const parsedContent = JSON.parse(content);
+                    Object.entries(parsedContent).forEach(([key, value]) => {
+                        headersSet.add(key);
+                        // Remove newline characters from each value
+                        result[key] = typeof value === 'string' ? value.replace(/\n/g, ' ').replace(/\r/g, ' ') : value;
+                    });
+                } catch (e) {
+                    // If parsing fails, treat content as a plain string
+                    result['content'] = content;
+                    headersSet.add('content');
+                }
+
+                csvData.push(result);
+            });
+        } else {
+            console.warn(`Warning: 'choices' is not an array for custom_id: ${customId}`);
+        }
+    }
+
+    const headers = Array.from(headersSet);
+    const csv = parse(csvData, { fields: headers });
+    fs.writeFileSync(outputFilePath, csv);
+}
 
 program.parse(); 
