@@ -1,0 +1,18 @@
+Analyze the SEPR data for {{domain}} and identify the official website. 
+
+Here is an example of input data
+<tool_name>oscarai</tool_name>
+<search_results_json>"{""searchParameters"": {""q"": ""Oscar AI\tGet Swift AI Answers, Lifelike 3D Experiences with OSCAR AI"", ""type"": ""search"", ""engine"": ""google""}, ""organic"": [{""title"": ""Oscar AI - Product Information, Latest Updates, and Reviews 2025"", ""link"": ""https://dev-lighthouse.producthunt.com/products/oscar-ai"", ""snippet"": ""Experience prompt responses to your inquiries by engaging with AI OSCAR, ensuring efficiency and time savings in obtaining answers."", ""rating"": 5, ""ratingCount"": 29, ""position"": 1}, ...""</search_results_json>
+
+searchParameters -> q = search qhery for tool_name
+organic - top results for this search query
+
+
+Given the following information:
+- Tool name: {{domain}}
+- Search results data: {{results}}
+
+Please return ONLY THE SINGLE search result that represents the official website of {{domain}}. It must be corporate domain. My response will be in JSON format with the official website's details.
+Return it in JSON format Lifelike
+
+{\"title\":\"Oscar AI\",\"link\":\"https://www.oscar.ai/\",\"domain_without_www\": \"oscar.ai\",\"snippet\":\"Oscar provides QSR franchisees with Al-generated insights, and scheduled action plans based on reports and team feedback.\",\"position\": 2}

@@ -1,0 +1,32 @@
+{
+  "name": "batch_api_processor",
+  "version": "1.0.0",
+  "description": "CLI tool for processing data through OpenAI Batch API",
+  "main": "src/cli.js",
+  "bin": {
+    "batch-processor": "./src/cli.js"
+  },
+  "scripts": {
+    "start": "node src/cli.js",
+    "prepare": "node src/cli.js prepare",
+    "upload": "node src/cli.js upload",
+    "submit": "node src/cli.js submit",
+    "check": "node src/cli.js check",
+    "download": "node src/cli.js download"
+  },
+  "keywords": [
+    "openai",
+    "batch-api",
+    "cli",
+    "data-processing"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^11.0.0",
+    "csv-parser": "^3.0.0",
+    "dotenv": "^16.0.3",
+    "fs-extra": "^11.1.1",
+    "openai": "^4.0.0"
+  }
+}
