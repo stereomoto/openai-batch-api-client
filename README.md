@@ -40,20 +40,13 @@ The tool provides several commands for different stages of batch processing:
 ### Prepare Batch Request
 
 ```bash
-node src/cli.js prepare -i input/data.csv -p input/prompt.txt -c input/config.json
+node src/cli.js prepare
 ```
-
-Options:
-- `-i, --input`: Input CSV file path (default: input/input.csv)
-- `-p, --prompt`: Prompt template file path (default: input/prompt.txt)
-- `-c, --config`: Configuration file path (default: input/config.json)
-- `--id-column`: CSV column to use as custom_id
-- `--id-prefix`: Prefix for generated custom_ids
 
 ### Upload File
 
 ```bash
-node src/cli.js upload -f temp/batch_request.jsonl
+node src/cli.js upload
 ```
 
 ### Submit Batch Job
