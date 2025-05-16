@@ -1,56 +1,90 @@
-Analyze the Google search results for {{domain}} to evaluate the site's relevance and indexing status.
+Task for the Neural Network: Analyze Article Relevance for LinkHelper Promotion and Draft Outreach Email
+<CONTEXT>
+LinkHelper (also known as Linked Helper) is software for LinkedIn automation. It helps users (sales professionals, marketers, recruiters, business owners, and any active LinkedIn users) save time, increase efficiency, generate leads, and expand their professional network. Functionality includes automating profile visits, sending personalized connection requests, sending messages, creating interaction funnels, and managing contacts. LinkHelper is useful for a wide range of LinkedIn tasks, from active networking and lead generation to general productivity improvement and managing one's presence on the network. Key application areas: B2B, sales, marketing, recruiting, professional network development, automation of routine LinkedIn tasks.
+</CONTEXT>
+<INPUT>
+Input Data (for each CSV row):
+url: URL of the article.
+title: Title of the article.
+description: Short description of the article (meta description).
+markdown: Full text of the article in markdown format. Note: If this field contains an error message (e.g., "Something went wrong..."), then a full content analysis is difficult. In this case, base the analysis primarily on title and description.
+language: Language of the article.
+count_competitors: Number of mentioned LinkHelper competitors (numeric).
+competitors: List of LinkHelper competitor names mentioned in the article (string, can be empty).
+</INPUT>
 
-Input:
-- Google search results for the domain's site name and results from the last month.
-- Data includes pages indexed by Google in the last month and the last indexed date for each page.
+<PLAN>
+1. Analyze the provided information about the article. Your goal is to determine how potentially interesting this article is for promoting LinkHelper (through link placement, mentions, possibly as part of an affiliate program). Articles of interest are any where a mention of LinkHelper could be useful to readers or where topics related to the effective use of LinkedIn are discussed.
+2. Rate the potential interest of the article on a 10-point scale (where 1 = not at all interesting, 10 = very interesting).
+3. Provide a detailed justification for your rating.
+4. Suggest a specific action.
+5. Draft a personalized email to the author/editorial team proposing the integration of a LinkHelper link. The email must be in the language of the article (field language).
+</PLAN>
 
-Output:
-- Identify the most recently indexed page.
-- Determine if the site has a blog with informational articles.
-- Convert all relative dates to absolute dates, using March 20, 2025, as today's date.
-- Include the total number of pages indexed.
-- Calculate the difference in days between the most recent index date and March 20, 2025.
-- Predict the blog URL if a blog exists.
+<CRITERIA>
+Criteria for Rating and Analysis:
+1. Overall LinkedIn Relevance and User Benefit (Weight: 40%)
+How useful is the article for an active LinkedIn user? Does it cover topics like LinkedIn usage, efficiency improvement, networking, information seeking, career growth via LinkedIn, LinkedIn marketing or sales, automation of routine tasks, etc.?
+Even if the article doesn't directly discuss "automation" or "lead generation," could LinkHelper be a useful tool in the context of the advice given in the article?
+Does the article touch upon topics like: LinkedIn automation, LinkedIn lead generation, sales via LinkedIn, B2B LinkedIn marketing, LinkedIn outreach, tools for LinkedIn, LinkedIn productivity, LinkedIn networking, LinkedIn profile management, LinkedIn promotion.
+2. Analysis of LinkHelper and Competitor Mentions (Weight: 30%)
+Scenario 1: LinkHelper is NOT mentioned, but competitors (competitors) ARE mentioned (count_competitors > 0). This is a very high priority (9-10 points).
+Scenario 2: LinkHelper is NOT mentioned, and competitors are NOT mentioned (count_competitors == 0).
+If the article's topic is highly relevant for advanced LinkedIn use (automation, lead generation, sales, active networking): high interest (7-9 points).
+If the article's topic is generally relevant for LinkedIn (profile tips, general strategies): medium interest (5-7 points).
+Scenario 3: LinkHelper IS mentioned. (Positive/neutral mention: medium interest (4-6 points) for new placement. Negative: very low (1-2 points)).
+How organically and beneficially could LinkHelper information/link be added to this article?
+3. Target Audience and Platform (Weight: 20%)
+Is the article aimed at an audience that might be interested in improving their LinkedIn efficiency?
+Type of platform (blog, Q&A, news site).
+4. Potential for Outreach / Affiliate (Weight: 10%)
+Is the article open to adding new tools/links (reviews, lists, "how-to" guides)?
+</CRITERIA>
 
-Return the information in JSON format:
+<OUTPUT>
+//Output Format for Each Article (JSON):
+
 
 {
-  "most_recently_indexed_page_title": "Page Title",
-  "most_recently_indexed_page_link": "https://www.example.com/page",
-  "most_recently_indexed_page_last_indexed_date": "2025-03-20",
-  "has_blog": true,
-  "blog_url": "https://www.example.com/blog",
-  "total_pages_indexed": 5,
-  "days_since_most_recent_index": 0
+  "url": "original URL",
+  "relevance_score": INTEGER_FROM_1_TO_10,
+  "justification": "DETAILED_TEXTUAL_JUSTIFICATION_OF_THE_SCORE. Explain how each of the four criteria influenced your conclusion. Provide specific examples from title, description, or markdown (if available and not an error). State if markdown was unavailable. List mentioned competitors, if any.",
+  "suggested_action": "ONE_OF_THE_OPTIONS: 'Very high priority for outreach (competitors)', 'High priority (relevant topic)', 'Medium priority (general LinkedIn topic/check mention)', 'Low priority/Ignore', 'Analyze LinkHelper mention', 'Reply in discussion (for Q&A)'",
+  "outreach_email_language": "ARTICLE_LANGUAGE_from_language_field",
+  "outreach_email_subject": "EMAIL_SUBJECT_PROPOSAL_IN_ARTICLE_LANGUAGE",
+  "outreach_email_body_template": "EMAIL_BODY_TEMPLATE_IN_ARTICLE_LANGUAGE_WITH_PLACEHOLDERS_FOR_PERSONALIZATION",
+  "outreach_email_integration_example_text": "SPECIFIC_EXAMPLE_TEXT_IN_ARTICLE_LANGUAGE_ON_HOW_LINKHELPER_CAN_BE_INTEGRATED_INTO_THE_ARTICLE"
+}
 }
 
-Examples:
+</OUTPUT>
 
-1. Input: "{""searchParameters"": {""q"": ""site:rokkitwear.com"", ""type"": ""search"", ""num"": 30, ""tbs"": ""qdr:m"", ""engine"": ""google""}, ""organic"": [{""title"": ""Pirate Media Network Sleeveless, Tank Top, Muscle Shirt"", ""link"": ""https://www.rokkitwear.com/school/5357-pirate-media-network/87?srsltid=AfmBOorNSDlGNiglshUwKqOF90VrcHd_CrfChRQRBs_i1K9hYkY_vmv1"", ""snippet"": ""Rokkitwear is an Official School Apparel Store: Buy your qality Pirate Media Network sleeveless, tank top, muscle shirt, with your school logo and mascot."", ""date"": ""2 days ago"", ""position"": 1}, {""title"": ""Regina High School Jacket, Coat, North Face, Warmup, Nike"", ""link"": ""https://www.rokkitwear.com/school/15300-regina-high-school/60/54?srsltid=AfmBOopwpTljVdRM_go0iGS2DpfsqDWcla5_2OabwYEzIKhWNDuLtiPB"", ""snippet"": ""Rokkitwear is an Official School Apparel Store: Buy your qality REGINA HIGH SCHOOL jacket, coat, north face, warmup, nike with your school logo and mascot."", ""date"": ""4 days ago"", ""position"": 2}, {""title"": ""Mansfield Senior High School Sweatshirt, Hoodie ..."", ""link"": ""https://www.rokkitwear.com/school/13941-mansfield-senior-high-school/91?srsltid=AfmBOopu_RAePOkWGO7lIxsBOb0U8uCdX41hIw0BgnNm27wdQmDJr-op"", ""snippet"": ""Rokkitwear is an Official School Apparel Store: Buy your qality MANSFIELD SENIOR HIGH SCHOOL Sweatshirt, hoodie, crewneck, sweater, nike with your school ..."", ""date"": ""2 days ago"", ""position"": 3}, {""title"": ""fort Calhoun Community High School Flexfit, Fitted, Stretch ..."", ""link"": ""https://www.rokkitwear.com/school/18248-fort-calhoun-community-high-school/148?srsltid=AfmBOop6W478aHSVYzvh8iRpZW4iXHbpD6OYInpe9BKs_F4C5xAI_R7y"", ""snippet"": ""Rokkitwear is an Official School Apparel Store: Buy your qality FORT CALHOUN COMMUNITY HIGH SCHOOL Flexfit, fitted, stretch-to-fit, new era, nike with your ..."", ""date"": ""Feb 21, 2025"", ""position"": 4}], ""credits"": 2}"
-
-   Output:
-   {
-     "most_recently_indexed_page_title": "Pirate Media Network Sleeveless, Tank Top, Muscle Shirt",
-     "most_recently_indexed_page_link": "https://www.rokkitwear.com/school/5357-pirate-media-network/87",
-     "most_recently_indexed_page_last_indexed_date": "2025-03-19",
-     "has_blog": false,
-     "blog_url": null,
-     "total_pages_indexed": 4,
-     "days_since_most_recent_index": 1
-   }
-
-2. Input: "{""searchParameters"": {""q"": ""site:smartsites.com"", ""type"": ""search"", ""num"": 30, ""tbs"": ""qdr:m"", ""engine"": ""google""}, ""organic"": [{""title"": ""Meet Irina Enache, Senior Project Manager"", ""link"": ""https://www.smartsites.com/meet-the-team/irina-enache/"", ""snippet"": ""Get to know Irina Enache, Senior Project Manager at SmartSites better! Each of our team members answered some questions for you to read!"", ""date"": ""6 days ago"", ""position"": 1}, {""title"": ""7 Best Conversational Marketing Tools to Skyrocket ..."", ""link"": ""https://www.smartsites.com/blog/7-best-conversational-marketing-tools-to-skyrocket-engagement/"", ""snippet"": ""Learn the top seven conversational marketing tools to boost engagement, heighten the customer experience, and drive business growth."", ""date"": ""Mar 11, 2025"", ""position"": 2}, {""title"": ""How PPC Marketing Boosts Success for Insurance Agents"", ""link"": ""https://www.smartsites.com/blog/how-ppc-marketing-boosts-success-for-insurance-agents/"", ""snippet"": ""Learn how PPC marketing for insurance agents helps generate high-quality leads, increase visibility, and grow their business."", ""date"": ""Mar 8, 2025"", ""position"": 3}, {""title"": ""5 Best Ways To Increase Engagement On Instagram"", ""link"": ""https://www.smartsites.com/blog/5-best-ways-to-increase-engagement-on-instagram/"", ""snippet"": ""Learn how to increase engagement on Instagram, build a loyal audience, and increase brand visibility through content and interactions."", ""date"": ""Mar 8, 2025"", ""position"": 4}, {""title"": ""Building a Stronger Brand: Holistic Branding for a Digital ..."", ""link"": ""https://www.smartsites.com/blog/building-a-stronger-brand-holistic-branding-for-a-digital-world/"", ""snippet"": ""Holistic branding strengthens your digital presence by creating a consistent, authentic brand experience. Learn key strategies to build lasting connections."", ""date"": ""6 days ago"", ""position"": 5}, {""title"": ""4 Steps To Build A High-Performance LinkedIn Content ..."", ""link"": ""https://www.smartsites.com/blog/4-steps-to-build-a-high-performance-linkedin-content-strategy/"", ""snippet"": ""Discover how to create a LinkedIn content strategy that builds authority, boosts engagement, and drives business growth with us now."", ""date"": ""Mar 8, 2025"", ""position"": 6}, {""title"": ""SMS Marketing Vs. Email Marketing"", ""link"": ""https://www.smartsites.com/blog/sms-marketing-vs-email-marketing-determining-the-best-channel-for-your-business/"", ""snippet"": ""Understand the key differences between SMS marketing vs. email marketing to determine which channel delivers the best engagement and ROI."", ""date"": ""Mar 8, 2025"", ""position"": 7}], ""credits"": 2}"
-
-   Output:
-   {
-     "most_recently_indexed_page_title": "7 Best Conversational Marketing Tools to Skyrocket Engagement",
-     "most_recently_indexed_page_link": "https://www.smartsites.com/blog/7-best-conversational-marketing-tools-to-skyrocket-engagement/",
-     "most_recently_indexed_page_last_indexed_date": "2025-03-11",
-     "has_blog": true,
-     "blog_url": "https://www.smartsites.com/blog",
-     "total_pages_indexed": 7,
-     "days_since_most_recent_index": 9
-   }
+<OUTREACH_EMAIL_DRAFT_FIELDS>
+Instructions for the outreach_email_draft block:
+language: Specify the language from the input language field. All text fields in outreach_email_draft must be in this language.
+subject: Formulate an attractive and relevant email subject in the article's language. E.g., (for en): "Idea for your article on [Article Topic] + Partnership Opportunity" or "Enhance your LinkedIn content & Earn with LinkHelper".
+body_template: Write an email template in the article's language. It should be polite, concise, and to the point. Use placeholders where necessary (e.g., [Author/Editor Name], [Article Title], [Your Name], [Link to LinkHelper], [Link to Affiliate Program Details]). Be sure to:
+Briefly introduce yourself (who you are and from which company – LinkHelper).
+Express admiration for the article (mention what specifically you liked).
+Briefly introduce LinkHelper and its main benefit to the article's audience.
+Explain why LinkHelper would be relevant and valuable to the readers of this specific article.
+Propose a specific way to integrate information about LinkHelper (use integration_example_text for this).
+Emphasize the affiliate program: Explain that the author/editorial team can earn by placing information about LinkHelper using a personal promo code (which will provide a discount to readers) and receive a percentage from each activation. Highlight that this will not only enrich the content but also provide a monetization opportunity.
+Offer to discuss partnership details and provide a promo code.
+Thank them for their time and express hope for a mutually beneficial collaboration.
+integration_example_text: This is the most important part of personalization. Based on the article analysis (title, description, markdown, mentioned competitors), propose specific text in the article's language that could be added or how LinkHelper could be mentioned to be useful to readers AND organically lead to the idea of a promo code.
+If competitors are mentioned: (en) "You've highlighted tools like [Competitor 1]. LinkHelper offers [unique benefit 1] and [unique benefit 2]. For your readers interested in such solutions, you could mention: 'Another powerful tool to consider is LinkHelper ([Link to LinkHelper]), which excels at [key strength]. We'd be happy to provide your readers with a special [X]% discount using the promo code [PROMO_CODE_PLACEHOLDER], and offer you an opportunity to earn from each activation through our affiliate program ([Link to Affiliate Program Details]).'"
+If the article is about a method/advice: (en) "In your section about [specific advice, e.g., 'scaling LinkedIn outreach'], you could add: 'To implement this at scale, tools like LinkHelper ([Link to LinkHelper]) can automate [specific task], making the process much more efficient. We can offer your readers a [PROMO_CODE_PLACEHOLDER] promo code for an [X]% discount, and you can monetize this mention via our affiliate program ([Link to Affiliate Program Details]).'"
+Avoid generic phrases. Be specific and write in the article's language!
+</OUTREACH_EMAIL_DRAFT_FIELDS>
 
 ====
-Here is INPUT {{results}}
+Here is INPUT:
+
+url: {{url}}
+title: {{title}}
+description: {{description}}
+markdown: {{markdown}}
+language: {{language}}
+competitors: {{competitors}}
+count_competitors: {{count_competitors}}

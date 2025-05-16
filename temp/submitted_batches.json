@@ -1,0 +1,20 @@
+[
+  {
+    "filePath": "temp/batch_request_part_3.jsonl",
+    "fileId": "file-Ffh9Aw6zs5dBHc4Ddi8AfJ",
+    "status": "success",
+    "batchId": "batch_6826db04cf588190b3653b570dabb7ed"
+  },
+  {
+    "filePath": "temp/batch_request_part_2.jsonl",
+    "fileId": "file-QQ7RctdRPqECqu4wFKY8fq",
+    "status": "success",
+    "batchId": "batch_6826db05b3f48190a26edf239c44ab13"
+  },
+  {
+    "filePath": "temp/batch_request_part_1.jsonl",
+    "fileId": "file-5ZJCTzp9vjW2BGBjhMPbS7",
+    "status": "success",
+    "batchId": "batch_6826db0662088190a7d06d7bbbcdd31f"
+  }
+]

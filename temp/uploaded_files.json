@@ -1,0 +1,17 @@
+[
+  {
+    "filePath": "temp/batch_request_part_3.jsonl",
+    "fileId": "file-Ffh9Aw6zs5dBHc4Ddi8AfJ",
+    "status": "success"
+  },
+  {
+    "filePath": "temp/batch_request_part_2.jsonl",
+    "fileId": "file-QQ7RctdRPqECqu4wFKY8fq",
+    "status": "success"
+  },
+  {
+    "filePath": "temp/batch_request_part_1.jsonl",
+    "fileId": "file-5ZJCTzp9vjW2BGBjhMPbS7",
+    "status": "success"
+  }
+]
